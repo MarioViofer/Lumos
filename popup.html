@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenView Pro</title>
+    <style>
+        :root {
+            --bg-color: #111827;
+            --card-bg: #1f2937;
+            --text-main: #f3f4f6;
+            --text-sub: #9ca3af;
+            --accent: #0ea5e9;
+            --accent-hover: #0284c7;
+            --slider-bg: #374151;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+        body { width: 350px; background-color: var(--bg-color); color: var(--text-main); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 16px; transition: opacity 0.3s; }
+        
+        /* Disabled State for Body */
+        body.is-disabled .main-controls {
+            opacity: 0.3;
+            pointer-events: none;
+            filter: grayscale(1);
+        }
+
+        header { margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        
+        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        .title-group { display: flex; align-items: center; gap: 8px; }
+        
+        h1 { margin: 0; font-size: 18px; font-weight: 700; background: linear-gradient(90deg, #0ea5e9, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .site-badge { font-size: 10px; background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 12px; color: var(--text-sub); max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .mode-indicator { font-size: 11px; margin-top: 4px; color: var(--text-sub); font-weight: 600; text-align: left; }
+
+        /* Power Button */
+        .power-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--success);
+            padding: 4px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .power-btn svg { width: 24px; height: 24px; fill: currentColor; }
+        .power-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.1); }
+        
+        .power-btn.off { color: var(--danger); }
+        .power-btn.off svg { fill: var(--danger); }
+
+        .toggles-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .toggle-btn { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+        .toggle-btn:hover { background: #374151; }
+        .toggle-btn.active { background: rgba(14, 165, 233, 0.15); border-color: var(--accent); color: var(--accent); }
+        .toggle-icon { width: 20px; height: 20px; fill: currentColor; }
+        .toggle-label { font-size: 11px; font-weight: 600; }
+
+        .slider-group { background: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+        .slider-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .slider-row:last-child { margin-bottom: 0; }
+        .slider-label { font-size: 12px; color: var(--text-sub); width: 70px; }
+        .range-container { flex-grow: 1; position: relative; display: flex; align-items: center; }
+        input[type=range] { -webkit-appearance: none; width: 100%; height: 4px; background: var(--slider-bg); border-radius: 2px; outline: none; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: var(--text-main); border-radius: 50%; cursor: pointer; transition: transform 0.1s; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        .slider-value { font-size: 11px; width: 35px; text-align: right; color: var(--accent); font-family: monospace; }
+
+        .footer-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-full { flex: 1; padding: 10px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .btn-reset { background: #ef4444; color: white; }
+        .btn-site { background: var(--card-bg); color: var(--text-sub); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-full:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <div class="title-group">
+                <h1>ZenView</h1>
+                <span class="site-badge" id="currentDomain">...</span>
+            </div>
+            <button class="power-btn" id="btnPower" title="Toggle Extension On/Off">
+                <svg viewBox="0 0 24 24"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>
+            </button>
+        </div>
+        <div class="mode-indicator" id="modeIndicator">Loading...</div>
+    </header>
+
+    <div class="main-controls">
+        <div class="toggles-grid">
+            <div class="toggle-btn" id="btnDark">
+                <svg class="toggle-icon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+                <span class="toggle-label">Dark</span>
+            </div>
+            <div class="toggle-btn" id="btnFocus">
+                <svg class="toggle-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
+                <span class="toggle-label">Focus</span>
+            </div>
+            <div class="toggle-btn" id="btnDyslexia">
+                <svg class="toggle-icon" viewBox="0 0 24 24"><path d="M9.93 13.5h4.14L12 7.98zM20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-4.05 16.5l-1.14-3H9.17l-1.12 3H5.96l5.11-13h1.86l5.11 13h-2.09z"/></svg>
+                <span class="toggle-label">Font</span>
+            </div>
+        </div>
+
+        <div class="slider-group">
+            <div class="slider-row">
+                <span class="slider-label">Brightness</span>
+                <div class="range-container"><input type="range" id="rangeBrightness" min="50" max="150" value="100"></div>
+                <span class="slider-value" id="valBrightness">100</span>
+            </div>
+            <div class="slider-row">
+                <span class="slider-label">Contrast</span>
+                <div class="range-container"><input type="range" id="rangeContrast" min="50" max="150" value="100"></div>
+                <span class="slider-value" id="valContrast">100</span>
+            </div>
+            <div class="slider-row">
+                <span class="slider-label">Sepia</span>
+                <div class="range-container"><input type="range" id="rangeSepia" min="0" max="100" value="0"></div>
+                <span class="slider-value" id="valSepia">0</span>
+            </div>
+            <div class="slider-row">
+                <span class="slider-label">Grayscale</span>
+                <div class="range-container"><input type="range" id="rangeGray" min="0" max="100" value="0"></div>
+                <span class="slider-value" id="valGray">0</span>
+            </div>
+        </div>
+
+        <div class="slider-group">
+            <div class="slider-row">
+                <span class="slider-label">Spacing</span>
+                <div class="range-container"><input type="range" id="rangeReadability" min="0" max="100" value="0"></div>
+                <span class="slider-value" id="valReadability">Off</span>
+            </div>
+        </div>
+
+        <div class="footer-actions">
+            <button class="btn-full btn-site" id="btnToggleSite">Customize for this Site</button>
+            <button class="btn-full btn-reset" id="btnReset">Reset</button>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
