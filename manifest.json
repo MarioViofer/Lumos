@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Lumos",
-  "version": "3.1",
+  "version": "1.2",
   "description": "Lumos: Illuminating your web experience with Dark Mode and Focus tools.",
   "author": "Viofer",
   "permissions": [
@@ -33,5 +33,11 @@
       "js": ["content.js"],
       "run_at": "document_start"
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "lumos@viofer.com",
+      "data_collection_permissions": false
+    }
+  }
 }
