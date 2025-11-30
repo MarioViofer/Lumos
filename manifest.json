@@ -3,7 +3,7 @@
   "name": "Lumos",
   "version": "1.3",
   "description": "Lumos: Illuminating your web experience with Dark Mode and Focus tools.",
-  "author": "viofer",
+  "author": "Viofer",
   "permissions": [
     "storage",
     "scripting",
@@ -41,7 +41,8 @@
         "ip_address": false,
         "technical_data": false,
         "interaction_data": false,
-        "social_data": false
+        "social_data": false,
+        "required": false
       }
     }
   }
