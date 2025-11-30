@@ -42,7 +42,7 @@
         "technical_data": false,
         "interaction_data": false,
         "social_data": false,
-        "required": false
+        "required": []
       }
     }
   }
