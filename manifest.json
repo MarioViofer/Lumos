@@ -39,10 +39,10 @@
       "id": "lumos@viofer.com",
       "data_collection_permissions": {
         "ip_address": false,
-        "technical_data": false,
+        "technical_data": true,
         "interaction_data": false,
         "social_data": false,
-        "required": []
+        "required": ["technical_data"]
       }
     }
   }
