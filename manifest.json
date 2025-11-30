@@ -34,17 +34,14 @@
       "run_at": "document_start"
     }
   ],
-  "browser_specific_settings": {
-    "gecko": {
+  "browser_specific_settings": 
+  {
+    "gecko": 
+    {
       "id": "lumos@viofer.com",
-      "data_collection_permissions": {
-        "ip_address": false,
-        "technical": true,
-        "interaction": false,
-        "social": false,
-        "required": [
-          "technical"
-        ]
+      "data_collection_permissions": 
+      {
+        "required": ["none"]
       }
     }
   }
